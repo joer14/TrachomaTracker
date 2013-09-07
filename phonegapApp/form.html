@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+	<meta name='apple-mobile-web-app-capable' content='yes'>
+	<meta name='msapplication-tap-highlight' content='no'>
+	<title>Form To JSON Submission</title>
+	<link rel='stylesheet' href='chui/chui.android-3.0.css'>
+	<script src='chui/chocolatechip-3.0.js'></script>
+	<script src='chui/chui-3.0.js'></script>
+   <style>
+
+    	form li > label {
+    		display: block;
+    		-webkit-box-sizing: border-box;
+    		width: 110px !important;
+    		text-align: right;
+    		font-weight: bold;
+    		padding-right: 10px;
+    		font-size: 14px;
+    		line-height: 22px;
+    		color: #586B96;
+    	}
+		form li > h3 {
+			width: auto;
+		}
+    	form li > label > span.warning {
+    		color: red;
+    	}
+    	form button[type=submit] {
+    		display: none;
+    	}
+
+   </style>
+   <script>
+      function submitForm() {
+         var formData = $.form2JSON('#userForm');
+         var data = JSON.stringify(formData);
+          // window.location = 'form-target.html?' + data;
+      }
+      $(function() {
+		    $('.button.done').on('click', function() {
+		        $('#userForm')[0].submit();
+		        // form = $.form2JSON()
+		    });
+		    $('#selectList').UISelectList({ selected: 0, name:'sex' }); 
+		    $('#selectList1').UISelectList({ selected: 0, name:'leftEyeRating' });    
+		    $('#selectList2').UISelectList({ selected: 0, name:'rightEyeRating' }); 
+		    $('.button.cancel').on('click', function() {
+		        window.location = 'index.html';
+		        // form = $.form2JSON()
+		    });    
+      });
+      var left;
+      $(function() {
+		    $('#leftCapture').on('click', function() {
+		    	left = "left";
+		    	capturePhoto();
+		        // $('#userForm')[0].submit();
+		        // form = $.form2JSON()
+		    });
+		    $('#rightCapture').on('click', function() {
+		    	left = "right";
+		    	capturePhoto();
+		        // $('#userForm')[0].submit();
+		        // form = $.form2JSON()
+		    });
+		        
+      });
+
+
+	// A button will call this function
+	//
+	function capturePhoto() {
+	    sessionStorage.removeItem('imagepath');
+	    // Take picture using device camera and retrieve image as base64-encoded string
+	    navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
+	}
+
+	function onPhotoDataSuccess(imageURI) { 
+	        // Uncomment to view the base64 encoded image data
+	        // console.log(imageData);
+
+	        // Get image handle
+	        //
+	        var imgProfile = document.getElementById('imgProfile');
+
+	        // Show the captured photo
+	        // The inline CSS rules are used to resize the image
+	        //
+	        imgProfile.src = imageURI;
+	        if(sessionStorage.isprofileimage==1){
+	            getLocation();
+	        }
+	        movePic(imageURI);
+	}
+
+	// Called if something bad happens.
+	// 
+	function onFail(message) {
+	    alert('Failed because: ' + message);
+	}
+
+	function movePic(file){ 
+	    window.resolveLocalFileSystemURI(file, resolveOnSuccess, resOnError); 
+	} 
+
+	//Callback function when the file system uri has been resolved
+	function resolveOnSuccess(entry){ 
+	    var d = new Date();
+	    var n = d.getTime();
+	    //new file name
+	    var alert(left);
+	    var newFileName = left + n + ".jpg";
+	    var myFolderApp = "TrachomaPictures";
+
+	    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSys) {      
+	    //The folder is created if doesn't exist
+	    fileSys.root.getDirectory( myFolderApp,
+	                    {create:true, exclusive: false},
+	                    function(directory) {
+	                        entry.moveTo(directory, newFileName,  successMove, resOnError);
+	                    },
+	                    resOnError);
+	                    },
+	    resOnError);
+	}
+
+	//Callback function when the file has been moved successfully - inserting the complete path
+	function successMove(entry) {
+	    //Store imagepath in session for future use
+	    // like to store it in database
+	    sessionStorage.setItem('imagepath', entry.fullPath);
+	}
+
+	function resOnError(error) {
+	    alert(error.code);
+	}
+
+   </script>
+</head>
+<body>
+	<nav>
+		<a class='button cancel'>Cancel</a>
+		<h1>Document Trachoma</h1>
+		<a class='button done'>Done</a>
+	</nav>
+	<article class='current'>
+		<section>
+			<form id='userForm' action='javascript:submitForm()'>
+				<h2>Personal Info</h2>
+				<ul class='list'>
+					<li class='comp'>
+						<div>
+							<h3>First name:</h3>
+						</div>
+						<aside>
+							<input type="text" id="inputFirst" name="firstName" placeholder="John">
+						 </aside>
+					 </li>
+					 <li class='comp'>
+						<div>
+							<h3>Middle name:</h3>
+						</div>
+						<aside>
+							<input type="text" id="inputMiddle" name="middleName"  placeholder="Andrew">
+						 </aside>
+					 </li>
+					 <li class='comp'>
+					 	<div>
+						  	<h3>Last name:</h3>
+						</div>
+						<aside>
+						 	<input type="text" id="inputLast" name="lastName" placeholder="Doe">
+						</aside>
+					 </li>
+					 <li class='comp'>
+					 	<div>
+							<h3>Aproximate Age:</h3>
+					 	</div>
+						<aside>
+						 	<input type="text" id="inputDOB" input="age" name="age" placeholder="25"> 
+						</aside>
+					 </li>
+				
+				</ul>
+				<h2>Sex</h2>
+				<ul class='list' id='selectList'>	
+					<li>
+						<h3>Male</h3> 
+						<input type='radio' name='sex' value='Male'>
+					</li>
+					<li>
+						<h3>Female</h3> 
+						<input type='radio' name='sex' value='Female'>
+					</li>
+					<li>
+						<h3>Other</h3> 
+						<input type='radio' name='sex' value='Other'>
+					</li>
+				</ul>
+				<h2>Left Eye Photo</h2>
+				
+				<a class='button align-right' id="leftCapture">Take Picture</a>
+
+				<h2>Left Eye Rating</h2>
+
+				<ul class='list' id='selectList1'>	
+					<li>
+						<h3>TF</h3> 
+						<input type='radio' name="leftEyeRating" value='None'>
+					</li>
+					<li>
+						<h3>TF</h3> 
+						<input type='radio' name="leftEyeRating" value='TF'>
+					</li>
+					<li>
+						<h3>TI</h3> 
+						<input type='radio' name="leftEyeRating" value='TI'>
+					</li>
+					<li>
+						<h3>TS</h3> 
+						<input type='radio' name="leftEyeRating" value='TS'>
+					</li>
+					<li>
+						<h3>TT</h3> 
+						<input type='radio' name="leftEyeRating" value='TT'>
+					</li>
+					<li>
+						<h3>CO</h3> 
+						<input type='radio' name="leftEyeRating" value='CO'>
+					</li>					
+				</ul>
+				<!-- <h2>Left Eye Notes</h2> -->
+				<ul class='list'>
+					<li class='comp'>
+						<div>
+							<h3>Left Eye Notes:</h3>
+					 	</div>
+						<aside>
+							<textarea id="inputLeftEyeNote" rows="3" name="leftEyeNote"></textarea>
+					  		<!-- <input type='text' name='user.message' placeholder='Say someting:'> -->
+						</aside>
+					</li>
+				</ul>
+				<h2>Right Eye Photo</h2>
+				
+				<a class='button align-right' id="rightCapture">Take Picture</a>
+
+				<h2>Right Eye Rating</h2>
+
+				<ul class='list' id='selectList2'>	
+					<li>
+						<h3>TF</h3> 
+						<input type='radio' name="rightEyeRating" value='None'>
+					</li>
+					<li>
+						<h3>TF</h3> 
+						<input type='radio' name="rightEyeRating" value='TF'>
+					</li>
+					<li>
+						<h3>TI</h3> 
+						<input type='radio' name="rightEyeRating" value='TI'>
+					</li>
+					<li>
+						<h3>TS</h3> 
+						<input type='radio' name="rightEyeRating" value='TS'>
+					</li>
+					<li>
+						<h3>TT</h3> 
+						<input type='radio' name="rightEyeRating" value='TT'>
+					</li>
+					<li>
+						<h3>CO</h3> 
+						<input type='radio' name="rightEyeRating" value='CO'>
+					</li>					
+				</ul>
+				<!-- <h2>Left Eye Notes</h2> -->
+				<ul class='list'>
+					<li class='comp'>
+						<div>
+							<h3>Right Eye Notes:</h3>
+					 	</div>
+						<aside>
+							<textarea id="inputRightEyeNote" rows="3" name="rightEyeNote"></textarea>
+					  		<!-- <input type='text' name='user.message' placeholder='Say someting:'> -->
+						</aside>
+					</li>
+				</ul>
+				<h2>Other Notes</h2>
+				<ul class='list'>
+					<li class='comp'>
+						<div>
+							<h3>Other Notes:</h3>
+					 	</div>
+						<aside>
+							<textarea id="inputOtherNotes" rows="3" name="otherNotes"></textarea>
+					  		<!-- <input type='text' name='user.message' placeholder='Say someting:'> -->
+						</aside>
+					</li>
+				</ul>
+				
+				
+			</form>
+		</section>
+	</article>
+</body>
+</html>

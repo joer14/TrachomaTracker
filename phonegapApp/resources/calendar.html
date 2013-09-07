@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ethiopian Health Tools</title>
+    <!-- <link rel="stylesheet" href="../../app/app.css"> -->
+    
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+    <script src="js/jquery-1.9.1.js"></script>
+    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/resources/jquery/jquery.calendars.js"></script>
+    <script type="text/javascript" src="/resources/jquery/jquery.calendars.plus.js"></script>
+    <script type="text/javascript" src="/resources/jquery/jquery.calendars.ethiopian.js"></script>
+    <script type="text/javascript" src="/resources/jquery/jquery.calendars.picker.js"></script>
+
+
+    <script type="text/javascript">
+    var first = true;
+    var second = true;
+    $(function() {
+    var calendar;
+    $('[type="radio"]').change(function() {  
+      if (first) {
+        calendar = $.calendars.instance('ethiopian');
+        first = false;
+      }
+      else if(second) second = false;
+      else if(!second){ 
+        calendar = $.calendars.instance($(this).val());
+      }
+      $('#default').text(calendar.local.dateFormat);
+    }).change();
+
+    var dateInputError = false; 
+    $('#check').click(function() {
+      try {
+        if (dateInputError){
+          $("#dateInput").removeClass("error");
+          $("#errortext").text("");
+        };
+        var date = calendar.parseDate('', $('#input').val());        // var datecon = date;
+        var datecon = date.newDate().add(2,'w');
+        var date1st = date.newDate().add(12,'w');        // alert(date1st);
+        var date2nd = date.newDate().add(27,'w');
+        var date3rd = date.newDate().add(40,'w');
+        
+        var unix1 = calendar.formatDate("@", datecon);
+        var unix2 = calendar.formatDate("@", date1st);
+        var unix3 = calendar.formatDate("@", date2nd);
+        var unix4 = calendar.formatDate("@", date3rd);
+        if(($('input:checked').val())== 'ethiopian'){
+          calendar2 = $.calendars.instance('');
+          $('#Eoutput0').text((calendar.formatDate("MM d, yyyy", datecon)));
+          $('#Eoutput1').text((calendar.formatDate("MM d, yyyy", date1st)));
+          $('#Eoutput2').text((calendar.formatDate("MM d, yyyy", date2nd)));
+          $('#Eoutput3').text((calendar.formatDate("MM d, yyyy", date3rd)));
+
+          $('#Goutput0').text((calendar2.formatDate("MM d, yyyy", calendar2.parseDate("@", unix1))));
+          $('#Goutput1').text((calendar2.formatDate("MM d, yyyy", calendar2.parseDate("@", unix2))));
+          $('#Goutput2').text((calendar2.formatDate("MM d, yyyy", calendar2.parseDate("@", unix3))));
+          $('#Goutput3').text((calendar2.formatDate("MM d, yyyy", calendar2.parseDate("@", unix4))));
+        }
+        else {
+          calendar2 = $.calendars.instance('ethiopian');
+          $('#Goutput0').text((calendar.formatDate("MM d, yyyy", datecon)));
+          $('#Goutput1').text((calendar.formatDate("MM d, yyyy", date1st)));
+          $('#Goutput2').text((calendar.formatDate("MM d, yyyy", date2nd)));
+          $('#Goutput3').text((calendar.formatDate("MM d, yyyy", date3rd)));
+
+          $('#Eoutput0').text((calendar2.formatDate("MM d, yyyy", calendar2.parseDate("@", unix1))));
+          $('#Eoutput1').text((calendar2.formatDate("MM d, yyyy", calendar2.parseDate("@", unix2))));
+          $('#Eoutput2').text((calendar2.formatDate("MM d, yyyy", calendar2.parseDate("@", unix3))));
+          $('#Eoutput3').text((calendar2.formatDate("MM d, yyyy", calendar2.parseDate("@", unix4))));
+
+        }
+    
+      }
+      catch (e) {
+        // alert(e);
+        dateInputError = true;
+        $("#dateInput").addClass("error");
+        $("#errortext").text("- " + e);
+      }
+    });
+  });
+  </script>
+  <script type="text/javascript">
+// $(function() {
+// //  $.calendars.picker.setDefaults({renderer: $.calendars.picker.themeRollerRenderer}); // Requires jquery.calendars.picker.ext.js
+//   $('#popupDatepicker').calendarsPicker({calendar: $.calendars.instance('ethiopian')});
+//   $('#inlineDatepicker').calendarsPicker({calendar: $.calendars.instance('ethiopian'), onSelect: showDate});
+// });
+
+// function showDate(date) {
+//   alert('The date chosen is ' + date);
+// }
+</script>
+    <style>
+      body {
+        padding-top: 60px;  
+        /*60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <!-- <link rel="stylesheet" href="css/main.css"> -->
+    <!-- <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"> -->
+  </head>
+  
+    <!-- <header> -->
+    
+    <!-- </header> -->
+    <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Ethiopian Med Tools</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class=""><a href="/resources/index1.html">Home</a></li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Trachoma Tracker<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/resources/index1.html">Data Entry Form</a></li>
+                  <li><a href="/resources/guide.html">Guide to Trachoma</a></li>
+                  <!-- <li><a href="#">Something else here</a></li> -->
+                  <li class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                </ul>
+              </li>
+
+              <li><a href="/resources/calendar.html">Ethiopian Pregnancy Wheel</a></li>
+              <li><a href="/resourecs/about.html">About & Contact</a></li>
+              
+            </ul>
+          </div><!--/.nav-collapse -->
+
+         <!--  <ul class="nav nav-pills">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#">Help</a></li>
+              
+          </ul> -->
+
+
+
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h2>Ethiopian Pregnancy Wheel</h2>
+
+    <!-- <div class="row"> -->
+    <!-- <div class="span10"> -->
+ <!--    <div class="row">
+    <div class="span4">...</div>
+    <div class="span4">...</div>
+    </div> -->
+      
+      <p>Input Calendar: 
+      <!-- <select id="calendar"> -->
+
+        <!-- <option value="ethiopian">Ethiopian</option> -->
+        <!-- <option value="gregorian">Gregorian</option> -->
+        
+      <!-- </select> -->
+      <br>
+      <label class="radio inline">
+        <input type="radio" name="optionsRadios" id="calendar" value="ethiopian" checked>
+        Ethiopian 
+      </label>
+      <label class="radio inline">
+        <input type="radio" name="optionsRadios" id="optionsRadios2" value="gregorian">
+        Gregorian
+      </label>
+      <!-- <p>Enter LMP: <input type="text" id="input2" value="01/1/2009"> </p> -->
+      <div id="dateInput" class="control-group">
+        <label class="control-label" for="input">Enter LMP: </label>
+        <div class="controls">
+          <input type="text" id="input" value="01/1/2009">
+          <span class="help-inline"><span id="default"></span> <span id="errortext"></span> </span>
+        </div>
+      </div>
+
+      <!-- <p>Check and format: <input type="text" id="format" value="DD, MM d, yyyy"> -->
+        <p> <button type="button" class="btn" id="check">Calculate</button></p>
+      <!-- <p>Result: <input type="text" id="Eoutput" size="40" readonly></p> -->
+      <div class="row">
+        <div class="span5">
+      <table class="table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Ethiopian Calendar</th>
+                  <th>Gregorian</th>
+                  <!-- <th>Username</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Conception Occurred: <br> <small>(2 weeks after LMP)</small></td>
+                  <td><span id="Eoutput0"></span></td>
+                  <td><span id="Goutput0"></span></td>
+                  <!-- <td>@mdo</td> -->
+                </tr>
+                <tr>
+                  <td>First Trimester Ends: <br> <small>(12 weeks)</small></td>
+                  <td><span id="Eoutput1"></span></td>
+                  <td><span id="Goutput1"></span></td>
+                  <!-- <td>@fat</td> -->
+                </tr>
+                <tr>
+                  <td>Second Trimester Ends: <br> <small>(27 weeks)</small> </td>
+                  <td><span id="Eoutput2"></span></td>
+                  <td><span id="Goutput2"></span></td>
+                  <!-- <td>@twitter</td> -->
+                </tr>
+                <tr>
+                  <td>Due Date: <br> <small>(40 weeks)</small> </td>
+                  <td><span id="Eoutput3"></span></td>
+                  <td><span id="Goutput3"></span></td>
+                  <!-- <td>@twitter</td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      
+      <!-- <span id="Eoutput3test"> Hi</span> -->
+      <!-- <p>Due Date: <input type="text" id="output" size="40" readonly></p> -->
+      <!-- {{}} -->
+      <!-- <h3>New Patient Documentation</h3>
+      <p>Document a trachoma. <br> More helper text.</p>
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="inputFirst">First Name</label>
+          <div class="controls">
+            <input type="text" id="inputFirst" placeholder="John">
+          </div>
+        </div>
+      </form>
+ -->
+      <hr>
+      
+    <!-- </div> -->
+  <!-- </div> -->
+</div>
+
+
+    <!-- <td-todos></td-todos> -->
+   <!--  <footer id="info">
+      <p>Footer</p>
+    </footer> -->
+
+    <!-- Scripts here. Don't remove this ↓ -->
+    <!-- // <script src="../../components/polymer/polymer.min.js"></script> -->
+    <!-- <link rel="import" href="elements/td-todos.html"> -->
+  </body>
+
+    
+
+<!-- <script src="http://code.angularjs.org/1.0.2/angular.min.js"></script> -->
+<!-- <script src="js/angular-ui.min.js"></script> -->
+<!-- <script src="js/app.js"></script> -->
+
+
+
+</html>
+
