@@ -35,11 +35,14 @@ class Patient(db.Model):
     age = db.StringProperty()
     leftEyeRating = db.StringProperty()
     leftEyePhoto = blobstore.BlobReferenceProperty(blobstore.BlobKey, required=False)
+    leftEyePhotoURL = db.StringProperty()
     rightEyeRating = db.StringProperty()   
     rightEyePhoto = blobstore.BlobReferenceProperty(blobstore.BlobKey, required=False)
+    rightEyePhotoURL = db.StringProperty()
     sex = db.StringProperty()
     leftEyeNote = db.StringProperty()
     rightEyeNote = db.StringProperty()
+    clinicNumber = db.IntegerProperty()
     
 
 
@@ -56,6 +59,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     upload_files = self.get_uploads('inputLeftEye')  # 'file' is file upload field in the form
     blob_info = upload_files[0]
     upload_files2 = self.get_uploads('inputRightEye')
+    blob_info2 = upload_files2[0]
     # user = users.get_current_user()
     # userQuery = User.gql("WHERE name='{}'".format(user.nickname())).get()
     patient = Patient()
@@ -65,6 +69,8 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     patient.age = cgi.escape(self.request.get('age'))
     patient.leftEyeRating = cgi.escape(self.request.get('leftEyeRating'))
     patient.leftEyePhoto = upload_files[0].key()
+    patient.leftEyePhotoURL = str(blob_info.key())
+    patient.rightEyePhotoURL = str(blob_info2.key())
     patient.rightEyeRating = cgi.escape(self.request.get('rightEyeRating'))
     patient.rightEyePhoto = upload_files2[0].key()
     patient.note = cgi.escape(self.request.get('note'))
@@ -72,6 +78,8 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     patient.sex = cgi.escape(self.request.get('sex'))
     patient.leftEyeNote = cgi.escape(self.request.get('leftEyeNote'))
     patient.rightEyeNote = cgi.escape(self.request.get('rightEyeNote'))
+    patient.clinicNumber = 1
+    patient.otherNotes = cgi.escape(self.request.get('otherNotes'))
     patient.put()
 
     self.redirect('/serve/%s' % blob_info.key())
@@ -87,6 +95,19 @@ class Homepage(webapp2.RequestHandler):
     	upload_url = blobstore.create_upload_url('/upload')
     	fileURL = upload_url
     	# fileurl = "joeee"
+        output = {
+            'fileURL': fileURL,
+            'joe': 'hiiii'     
+            }
+
+        path = os.path.join(os.path.dirname(__file__), 'templates/home.html')
+        self.response.write(template.render(path, output))
+
+class Form(webapp2.RequestHandler):
+    def get(self):
+        upload_url = blobstore.create_upload_url('/upload')
+        fileURL = upload_url
+        # fileurl = "joeee"
         output = {
             'fileURL': fileURL,
             'joe': 'hiiii'     
@@ -114,8 +135,10 @@ class Dataset(webapp2.RequestHandler):
         # upload_url = blobstore.create_upload_url('/upload')
         # fileURL = upload_url
         # fileurl = "joeee"
+        patients = Patient.all()
+
         output = {
-            'fileURL': 'fileURL',
+            'patients': patients,
             'joe': 'hiiii'     
             }
 
@@ -126,6 +149,7 @@ class Dataset(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([('/', Homepage),
 							   ('/results', Results),
+                               ('/form', Form),
                                ('/dataset', Dataset),
 							   ('/a', MainHandler),
                                ('/upload', UploadHandler),

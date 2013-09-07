@@ -62,11 +62,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Trachoma Tracker</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/form">Form</a></li>
+            <li><a href="/results">Results</a></li>
+            <li><a href="/dataset">Dataset</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
@@ -137,9 +140,12 @@
             </select>
           </div>
         </div>
-        <label>Left Eye Note</label>
-          <textarea id="inputLeftEyeNote" rows="3" name="leftEyeNote"></textarea>
-          
+        <div class="control-group">
+          <label class="control-label" for="inputLeftEyeNote">Left Eye Note</label>
+            <div class="controls">
+                <textarea id="inputLeftEyeNote" rows="3" name="leftEyeNote"></textarea>
+            </div>
+        </div> 
         <div class="control-group">
           <label class="control-label" for="inputRightEye">Right Eye</label>
           <div class="controls">
@@ -158,14 +164,24 @@
             </select>
           </div>
         </div>
-        <label>Right Eye Note</label>
-          <textarea id="inputLeftEyeNote" rows="3" name="rightEyeNote"></textarea>
-        
+        <div class="control-group">
+          <label class="control-label" for="inputRightEyeNote">Right Eye Note</label>
+            <div class="controls">
+                <textarea id="inputRightEyeNote" rows="3" name="rightEyeNote"></textarea>
+            </div>
+        </div>
+         <div class="control-group">
+          <label class="control-label" for="inputOtherNotes">Other Notes</label>
+            <div class="controls">
+               <textarea id="inputOtherNotes" rows="3" name="otherNotes"></textarea>
+          </div>
+        </div>
+        <br>
         <div class="control-group">
           <div class="controls">
             
             <!-- <button type="submit" class="btn">Sign in</button> -->
-            <button type="submit" class="btn btn-primary" id="finalSubmit">Save changes</button>
+            <button type="submit" class="btn btn-primary" id="finalSubmit">Submit</button>
             <button type="button" class="btn">Cancel</button>
           </div>
         </div>

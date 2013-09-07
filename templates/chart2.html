@@ -25,11 +25,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Trachoma Tracker</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/form">Form</a></li>
+            <li><a href="/results">Results</a></li>
+            <li class="active"><a href="/dataset">Dataset</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
@@ -41,25 +44,54 @@
 
       <div class="starter-template">
       <br><br><br><br>
-        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        <h1>Patient Dataset</h1>
+        <p class="lead">Data collected: </p>
+
         <table class="table table-bordered " >
             <thead>
                 <tr>
-                    <th colspan="2">Patients</th>
-                </tr>
-                <tr>
                     <th>Name</th>
-                    <th>Gender</th>
+                    <th>Sex</th>
                     <th>Age</th>
                     <th>Left Eye Grading</th>
                     <th>Left Eye Note</th>
+                    <th>Left Eye Thumbnail</th>
                     <th>Right Eye Grading</th>
                     <th>Right Eye Note</th>
+                    <th>Right Eye Thumbnail</th>
+                    <th>Other Notes</th>
 
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td>Alazar Nemariam</td>
+                    <td>Male</td>     
+                    <td>43</td>
+                    <td>TF</td>
+                    <td>Left Eye Note...need wrap here</td>
+                    <td><img src="pics/guide2.png"width="85" height="60"/></td>
+                    <td>CO</td>
+                    <td>Right Eye Note...need wrap here</td>
+                    <td><img src="pics/guide3.png"width="85" height="60" /></td>
+                </tr>
+                {% for p in patients %}
+                <tr>
+                    <td>{{p.lastName}}, {{p.firstName}} - {{p.middleName}}</td>
+                    <td>{{p.sex}}</td>     
+                    <td>{{p.age}}</td>
+                    <td>{{p.leftEyeRating}}</td>
+                    <td>{{p.leftEyeNote}}</td>
+                    <td><img src="/serve/{{p.leftEyePhotoURL}}"width="85" height="60"/></td>
+                    <td>{{p.rightEyeRating}}</td>
+                    <td>{{p.rightEyeNote}}</td>
+                    <td><img src="/serve/{{p.rightEyePhotoURL}}"width="85" height="60"/></td>
+                    <td>{{p.otherNotes}}</td>
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+            <!-- <tbody>
                 <tr>
                     <td>Alazar Nemariam</td>
                     <td>Male</td>     
@@ -99,7 +131,7 @@
                     <td><img src="pics/guide6.png" width="85" height="60"/></td>
                 </tr>
                 
-            </tbody>
+            </tbody> -->
         </table>
        
       
