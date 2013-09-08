@@ -83,9 +83,9 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     
     upload_files = self.get_uploads('inputLeftEye') 
     if (len(upload_files)):
-        logging.ERROR('Start guestbook signing request')
+        # logging.ERROR('Start guestbook signing request')
         blob_info = upload_files[0]
-        patient.leftEyePhoto = upload_files[0].key()
+        patient.leftEyePhoto = str(upload_files[0].key())
         patient.leftEyePhotoURL = str(blob_info.key())
 
     else:
@@ -176,7 +176,15 @@ class Results(webapp2.RequestHandler):
     	# upload_url = blobstore.create_upload_url('/upload')
     	# fileURL = upload_url
     	# fileurl = "joeee"
+        # user = users.get_current_user()
+        q = db.Query(Patient)
+        q.filter("leftEyeRating =", "None")
+        q.filter("rightEyeRating =","None")
+        # q.order("")
+        
+     
         output = {
+            'noeye': str(q.fetch(1000).count(1000)),
             'fileURL': 'fileURL',
             'joe': 'hiiii'     
             }

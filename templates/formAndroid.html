@@ -150,8 +150,8 @@
 					var data = 'image=' + dataURL;
 					data = dataURL;
 				
-					console.log(data);
-					alert("seetting!");
+					// console.log(data);
+					// alert("seetting!");
 					if (first){
 						document.getElementById('leftIn').setAttribute("value", data);
 						first = false;
@@ -177,13 +177,17 @@
 			   reader.readAsDataURL(file);
 			}
 		};
-
 		var serializedForm = null;	
-	  function updateURLThing(){
-	  	$.get('/url', function(uploadURL) { 
-         	document.getElementByID("userForm").setAttribute(action=uploadURL);
-         };
-     }
+
+		function updateURLThing(){
+	      $.get('/url', function(uploadURL) { 
+	       console.log(uploadURL);
+           form = document.getElementById("userForm");
+           $('#userForm').attr('action',uploadURL);
+           // form.sestAttribute(action = uploadURL.toString());
+    	   });
+     	}
+
 
       function submitForm() {
          var formData = $.form2JSON('#userForm');
@@ -191,8 +195,7 @@
          serializedForm = (data);
          updateURLThing();
          document.getElementById("userForm").submit();
-         
-         // action="{{fileURL}}" method="POST" enctype="multipart/form-data"
+
          	 // serializedForm;
          // enterData();
 
@@ -302,22 +305,10 @@
 		<script>
 
       $(function() {
-		    $('.button.done').on('click', function() {
-		        $('#userForm')[0].submit();
-		        $.get('/url', function(uploadURL) { 
-			        $.ajax({
-					  url : "/path/to/controller",
-					  method: 'post',
-					  headers: {
-					    "Content-Type" : "application/x-www-form-urlencoded",
-					    "async" : true,
-					    "Access-Control-Allow-Origin" : "*",
-					    "Accept" : "text/plain"
-					  },
-					  data: myData,
-					  success : mySuccessCallback,
-					  error: myErrorCallback
-					});
+
+		    $('.button.done').on('singletap', function() {
+		        // alert("clicked");
+		        submitForm();// $('#userForm')[0].submit();
 		        
 		    });
 
@@ -327,8 +318,10 @@
 		    $('#selectList1').UISelectList({ selected: 0, name:'leftEyeRating' });    
 		    $('#selectList2').UISelectList({ selected: 0, name:'rightEyeRating' }); 
 		    
-		    $('.button.cancel').on('click', function() {
-		        window.location = 'index.html';
+		    $('.button.cancel').on('singletap', function() {
+		        // window.location = 'index.html';
+		        // should add dialog box 
+		        formReset();
 		        // form = $.form2JSON()
 		    });    
       });
@@ -346,18 +339,10 @@
 	<article class='current'>
 		<section>
 
-			<!-- <div id="clear" class="">
-		      <button onclick="app.clear()">Clear Store</button>
-		    </div>
-		    <div id="clear" class="">
-		      <button onclick="formReset()">Clear Form</button>
-		    </div>
-		    <div id="" class="">
-		      <button onclick="app.listItems()">Upload Store</button>
-		    </div> -->
+			
 
 
-			<form id='userForm' action='javascript:submitForm()'>
+			<form id='userForm' action='javascript:submitForm()' method='POST' enctype="multipart/form-data">
 				
 		             <input type="hidden" id="leftIn" name="inputLeftEyeHidden" value="">
 
@@ -391,7 +376,7 @@
 					 </li>
 					 <li class='comp'>
 					 	<div>
-							<h3>Aproximate Age:</h3>
+							<h3>≈ Age:</h3>
 					 	</div>
 						<aside>
 						 	<input type="text" id="inputDOB" input="age" name="age" placeholder="25"> 
@@ -417,7 +402,7 @@
 				<h2>Left Eye Photo</h2>
 				
 				<!-- <a class='button align-right' id="leftCapture">Take Picture</a> -->
-				<input type="file" accept="image/*" name="inputLeftEye1" id="inputLeftEye" capture="camera" />
+				<input type="file" accept="image/*" name="inputLeftEye" id="inputLeftEye" capture="camera" />
 				<output id="leftfilesInfo"></output>
 				<h2>Left Eye Rating</h2>
 
@@ -466,7 +451,7 @@
 				<h2>Right Eye Photo</h2>
 				
 				<!-- <a class='button align-right' id="rightCapture">Take Picture</a> -->
-				<input type="file" name="file" accept="image/*" name="inputRightEye" id="inputRightEye" capture="camera" />
+				<input type="file" accept="image/*" name="inputRightEye" id="inputRightEye" capture="camera" />
 				<!-- <canvas id="myCanvas" width="578" height="200"></canvas> -->
 				
 				<output id="rightfilesInfo"></output>
@@ -517,7 +502,7 @@ then once online (check via xhr) post each item in indexDB
 				<ul class='list'>
 					<li class='comp'>
 						<div>
-							<h3>Right Eye Notes:</h3>
+							<h2>Right Eye Notes:</h2>
 					 	</div>
 						<aside>
 							<textarea id="inputRightEyeNote" rows="3" name="rightEyeNote"></textarea>
