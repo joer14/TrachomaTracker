@@ -82,8 +82,14 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     patient.clinicNumber = 1
     patient.otherNotes = cgi.escape(self.request.get('otherNotes'))
     patient.put()
+    # self.redirect('/serve/%s' % blob_info.key())
 
-    self.redirect('/serve/%s' % blob_info.key())
+class UploadURL(blobstore_handlers.BlobstoreDownloadHandler):
+  def get(self):
+        upload_url = blobstore.create_upload_url('/upload')
+        # upload_url = 'adf'
+        self.response.out.write(upload_url)
+
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
   def get(self, resource):
@@ -169,5 +175,6 @@ app = webapp2.WSGIApplication([('/', Homepage),
                                ('/dataset', Dataset),
 							   ('/a', MainHandler),
                                ('/upload', UploadHandler),
+                               ('/url', UploadURL),
                                ('/serve/([^/]+)?', ServeHandler)],
                               debug=True)

@@ -24,10 +24,11 @@
 	}
 	
 	function refreshTable(){
-		objStore.getAll(listItems);
+		// objStore.getAll();
 	}
 	
 	function listItems(data){
+		objStore.getAll(upload);
 		// var header, tpl,
 		// 	props = ['id'],
 		// 	content = '';
@@ -51,6 +52,7 @@
 		
 		// nodeCache['results-container'].innerHTML = '<table>' + header + content + '</table>';
 	}
+	// function upload(data)
 	
 	function enterData(){
 		// read data from inputs
@@ -68,7 +70,8 @@
 				// Don't do this at home. This is just a very dirty hack to 'guess' what
 				// type of data you just entered. If you do stuff like this in production
 				// code, UNICORNS WILL DIE. You have been warned.
-				data[propName] = ['{', '['].indexOf(value.substring(0,1)) !== -1 ? eval('(' + value + ')') : parseInt(value, 10) || value;
+				// data[propName] = ['{', '['].indexOf(value.substring(0,1)) !== -1 ? eval('(' + value + ')') : parseInt(value, 10) || value;
+				data[propName] = serializedForm;
 			}
 		}
 		if(!hasData){
@@ -86,7 +89,10 @@
 	// export some functions to the outside to
 	// make the onclick="" attributes work.
 	window.app = {
-		clear: clear
+		clear: clear,
+		refreshTable: refreshTable,
+		listItems: listItems,
+		enterData: enterData
 	};
 	
 	// go!

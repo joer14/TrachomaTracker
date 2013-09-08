@@ -11,6 +11,7 @@
 	<script src='resources/chui/chui-3.0.js'></script>
 	<script type="text/javascript" src="resources/js/idbstore.min.js"></script>
 	<script type="text/javascript" src="resources/js/app.js"></script>
+	<!-- // <script type="text/javascript" src="resources/js/jquery-1.9.1.js"></script> -->
 
    <style>
 
@@ -37,7 +38,11 @@
 
    </style>
    <script>
-		window.onload = function () { 
+  		var imgLeft = null;
+   		var imgRight = null;
+		
+   		window.onload = function () { 
+		
 			// window.addEventListener("DOMContentLoaded", init, false);​
 			
 			document.getElementById('inputRightEye').addEventListener('change', fileSelect, false);
@@ -83,7 +88,7 @@
 					}
 				};
 				document.getElementById('inputLeftEye').onchange = function(){
-					var files = document.getElementById('inputRightEye').files;
+					var files = document.getElementById('inputLeftEye').files;
 					for(var i = 0; i < files.length; i++) {
 						resizeAndUpload(files[i]);
 					}
@@ -99,7 +104,7 @@
 				var tempImg = new Image();
 				tempImg.src = reader.result;
 				tempImg.onload = function() {
-
+					// alert("hi");
 					var MAX_WIDTH = 400;
 					var MAX_HEIGHT = 300;
 					var tempW = tempImg.width;
@@ -132,6 +137,24 @@
 					// xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 					var data = 'image=' + dataURL;
 					console.log(data);
+					alert("seetting!");
+					if (first){
+						document.getElementById('leftIn').setAttribute("value", data);
+					}
+					else {
+						document.getElementById('rightIn').setAttribute("value", data);
+					};
+					// var hiddenField = document.createElement("input");
+		   //          hiddenField.setAttribute("type", "hidden");
+		   //          hiddenField.setAttribute("name", key);
+		   //          hiddenField.setAttribute("value", params[key]);
+					// if(first){
+					// 	imgLeft = data;
+
+					// 	// app.enterData(data);
+					// }
+					// else {imgRight = data;}
+					// ;
 					// xhr.send(data);
 				  }
 
@@ -143,16 +166,106 @@
       function submitForm() {
          var formData = $.form2JSON('#userForm');
          var data = JSON.stringify(formData);
-         serializedForm = data;
+         serializedForm = JSON.stringify(data);
          	 // serializedForm;
          enterData();
+
          // include function that clears form input fields here
-         
+
           // window.location = 'form-target.html?' + data;
       }
+      	function formReset(){
+			document.getElementById("userForm").reset();
+			$('#leftfilesInfo').empty();
+			$('#rightfilesInfo').empty();
+
+		}
+
+ 	// write upload function that goes through the db, uploads each request -->
+	  function post_to_url(path, params, method) {
+		    method = method || "post"; // Set method to post by default if not specified.
+
+		    // The rest of this code assumes you are not using a library.
+		    // It can be made less wordy if you use one.
+		    var form = document.createElement("form");
+		    form.setAttribute("method", method);
+		    form.setAttribute("action", path);
+
+		    for(var key in params) {
+		        if(params.hasOwnProperty(key)) {
+		            var hiddenField = document.createElement("input");
+		            hiddenField.setAttribute("type", "hidden");
+		            hiddenField.setAttribute("name", key);
+		            hiddenField.setAttribute("value", params[key]);
+
+		            form.appendChild(hiddenField);
+		         }
+		    }
+
+		    document.body.appendChild(form);
+		    form.submit();
+		}
+      function upload(data){
+	
+      	data.forEach(function(item){
+			$.get('/url', function(uploadURL) { 
+				alert(uploadURL);
+				console.log(uploadURL);
+				console.log(item);
+				var mydata;
+				// $.post("updateUser.php", { name: "Joe", time: "10PM" } );
+				post_to_url(uploadURL, item);
+				// $.ajax({
+				//   url : uploadURL,
+				//   method: 'post',
+				//   headers: {
+				//     "Content-Type" : "application/x-www-form-urlencoded",
+				//     "async" : false,
+				//     "Access-Control-Allow-Origin" : "*",
+				//     "Accept" : "text/plain"
+				//   },
+				//   data: JSON.stringify(item),
+				//   success : console.log("success"),
+				//   error: console.log("fail")
+				// });
+
+
+				// $.post(uploadURL, JSON.stringify(item) , function(data) {
+					// alert("posting");
+				// });
+			});
+
+
+		});
+      	// };
+		// 	for(var prop in item){
+		// 		if(props.indexOf(prop) < 0){
+		// 			props.push(prop);
+		// 		}
+		// 	}	
+
+		  //   console.log("item :" + item);
+	   //    	$.get('/url', success: function(uploadURL) { 
+	   //    		console.log(uploadURL);
+	   //    		console.log(item);
+
+	   //    		// .success(function(data) {
+		      	// $.post(uploadURL, JSON.stringify(item) , function(data) {
+	   // 				// alert("Data Loaded: " + data);
+				// // });
+
+	   //    	;
+				// // $.post("test.php", { name: "John", time: "2pm" })
+				// // 	.done(function(data) {
+				// //   	alert("Data Loaded: " + data);
+				// // });
+	   //    	});
+    //   	});
+
+      };
         </script>
 
-
+       
 		</script>
 
 		<script>
@@ -190,12 +303,19 @@
 			<div id="clear" class="">
 		      <button onclick="app.clear()">Clear Store</button>
 		    </div>
+		    <div id="clear" class="">
+		      <button onclick="formReset()">Clear Form</button>
+		    </div>
 		    <div id="" class="">
-		      <button onclick="upload()">Upload Store</button>
+		      <button onclick="app.listItems()">Upload Store</button>
 		    </div>
 
 
 			<form id='userForm' action='javascript:submitForm()'>
+				
+		             <input type="hidden" id="leftIn" name="inputLeftEye" value="">
+
+		             <input type="hidden" id="rightIn" name="inputRightEye" value="">
 				<h2>Personal Info</h2>
 				<ul class='list'>
 					<li class='comp'>
@@ -250,7 +370,7 @@
 				<h2>Left Eye Photo</h2>
 				
 				<!-- <a class='button align-right' id="leftCapture">Take Picture</a> -->
-				<input type="file" name="file" accept="image/*" name="inputLeftEye" id="inputLeftEye" capture="camera" />
+				<input type="file" name="file" accept="image/*" name="inputLeftEye1" id="inputLeftEye" capture="camera" />
 				<output id="leftfilesInfo"></output>
 				<h2>Left Eye Rating</h2>
 
