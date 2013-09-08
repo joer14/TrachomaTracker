@@ -177,13 +177,24 @@
 			   reader.readAsDataURL(file);
 			}
 		};
+
 		var serializedForm = null;	
+	  function updateURLThing(){
+	  	$.get('/url', function(uploadURL) { 
+         	document.getElementByID("userForm").setAttribute(action=uploadURL);
+         };
+     }
+
       function submitForm() {
          var formData = $.form2JSON('#userForm');
          var data = (formData);
          serializedForm = (data);
+         updateURLThing();
+         document.getElementById("userForm").submit();
+         
+         // action="{{fileURL}}" method="POST" enctype="multipart/form-data"
          	 // serializedForm;
-         enterData();
+         // enterData();
 
          // include function that clears form input fields here
 
@@ -293,6 +304,20 @@
       $(function() {
 		    $('.button.done').on('click', function() {
 		        $('#userForm')[0].submit();
+		        $.get('/url', function(uploadURL) { 
+			        $.ajax({
+					  url : "/path/to/controller",
+					  method: 'post',
+					  headers: {
+					    "Content-Type" : "application/x-www-form-urlencoded",
+					    "async" : true,
+					    "Access-Control-Allow-Origin" : "*",
+					    "Accept" : "text/plain"
+					  },
+					  data: myData,
+					  success : mySuccessCallback,
+					  error: myErrorCallback
+					});
 		        
 		    });
 
@@ -320,7 +345,8 @@
 	</nav>
 	<article class='current'>
 		<section>
-			<div id="clear" class="">
+
+			<!-- <div id="clear" class="">
 		      <button onclick="app.clear()">Clear Store</button>
 		    </div>
 		    <div id="clear" class="">
@@ -328,7 +354,7 @@
 		    </div>
 		    <div id="" class="">
 		      <button onclick="app.listItems()">Upload Store</button>
-		    </div>
+		    </div> -->
 
 
 			<form id='userForm' action='javascript:submitForm()'>
