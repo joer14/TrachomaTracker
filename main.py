@@ -57,10 +57,7 @@ class MainHandler(webapp2.RequestHandler):
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
   def post(self):
-    upload_files = self.get_uploads('inputLeftEye')  # 'file' is file upload field in the form
-    blob_info = upload_files[0]
-    upload_files2 = self.get_uploads('inputRightEye')
-    blob_info2 = upload_files2[0]
+    
     # user = users.get_current_user()
     # userQuery = User.gql("WHERE name='{}'".format(user.nickname())).get()
     patient = Patient()
@@ -69,11 +66,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     patient.middleName = cgi.escape(self.request.get('middleName'))
     patient.age = cgi.escape(self.request.get('age'))
     patient.leftEyeRating = cgi.escape(self.request.get('leftEyeRating'))
-    patient.leftEyePhoto = upload_files[0].key()
-    patient.leftEyePhotoURL = str(blob_info.key())
-    patient.rightEyePhotoURL = str(blob_info2.key())
     patient.rightEyeRating = cgi.escape(self.request.get('rightEyeRating'))
-    patient.rightEyePhoto = upload_files2[0].key()
     patient.note = cgi.escape(self.request.get('note'))
     patient.join_date=datetime.datetime.now().date()
     patient.sex = cgi.escape(self.request.get('sex'))
@@ -81,6 +74,23 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     patient.rightEyeNote = cgi.escape(self.request.get('rightEyeNote'))
     patient.clinicNumber = 1
     patient.otherNotes = cgi.escape(self.request.get('otherNotes'))
+    
+    upload_files = self.get_uploads('inputLeftEye')  # 'file' is file upload field in the form
+    if (len(upload_files)):
+        blob_info = upload_files[0]
+        patient.leftEyePhoto = upload_files[0].key()
+        patient.leftEyePhotoURL = str(blob_info.key())
+    else:
+        leftimg = cgi.escape(self.request.get('inputLeftEyeHidden'))
+        if (len(leftimg)):
+            #reconstruct and store image
+
+    upload_files2 = self.get_uploads('inputRightEye')
+    if (len(upload_files2)):
+        blob_info2 = upload_files2[0]
+        patient.rightEyePhotoURL = str(blob_info2.key())
+        patient.rightEyePhoto = upload_files2[0].key()
+    
     patient.put()
     # self.redirect('/serve/%s' % blob_info.key())
 

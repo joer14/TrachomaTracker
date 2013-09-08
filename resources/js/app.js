@@ -62,7 +62,7 @@
 		
 		while(--count){
 			// propName = document.getElementById('prop_' + count).value.trim();
-			propName = "1";
+			propName = "yo";
 			if(propName.length){
 				hasData = true;
 				// value = document.getElementById('value_' + count).value.trim();

@@ -165,8 +165,8 @@
 		var serializedForm = null;	
       function submitForm() {
          var formData = $.form2JSON('#userForm');
-         var data = JSON.stringify(formData);
-         serializedForm = JSON.stringify(data);
+         var data = (formData);
+         serializedForm = (data);
          	 // serializedForm;
          enterData();
 
@@ -184,13 +184,15 @@
  	// write upload function that goes through the db, uploads each request -->
 	  function post_to_url(path, params, method) {
 		    method = method || "post"; // Set method to post by default if not specified.
-
+		    // alert("dsafs");
 		    // The rest of this code assumes you are not using a library.
 		    // It can be made less wordy if you use one.
 		    var form = document.createElement("form");
 		    form.setAttribute("method", method);
 		    form.setAttribute("action", path);
-
+		    form.setAttribute("enctype","multipart/form-data");
+		    // params = JSON.parse(params);
+		    params = params.yo;
 		    for(var key in params) {
 		        if(params.hasOwnProperty(key)) {
 		            var hiddenField = document.createElement("input");
@@ -212,9 +214,12 @@
 				alert(uploadURL);
 				console.log(uploadURL);
 				console.log(item);
+				// var item2 = JSON.parse(item);
+				// console.log(item2);
 				var mydata;
-				// $.post("updateUser.php", { name: "Joe", time: "10PM" } );
+				// $.post("/url", item);
 				post_to_url(uploadURL, item);
+
 				// $.ajax({
 				//   url : uploadURL,
 				//   method: 'post',
@@ -313,9 +318,9 @@
 
 			<form id='userForm' action='javascript:submitForm()'>
 				
-		             <input type="hidden" id="leftIn" name="inputLeftEye" value="">
+		             <input type="hidden" id="leftIn" name="inputLeftEyeHidden" value="">
 
-		             <input type="hidden" id="rightIn" name="inputRightEye" value="">
+		             <input type="hidden" id="rightIn" name="inputRightEyeHidden" value="">
 				<h2>Personal Info</h2>
 				<ul class='list'>
 					<li class='comp'>
@@ -370,7 +375,7 @@
 				<h2>Left Eye Photo</h2>
 				
 				<!-- <a class='button align-right' id="leftCapture">Take Picture</a> -->
-				<input type="file" name="file" accept="image/*" name="inputLeftEye1" id="inputLeftEye" capture="camera" />
+				<input type="file" accept="image/*" name="inputLeftEye1" id="inputLeftEye" capture="camera" />
 				<output id="leftfilesInfo"></output>
 				<h2>Left Eye Rating</h2>
 
@@ -470,6 +475,7 @@ then once online (check via xhr) post each item in indexDB
 						</aside>
 					</li>
 				</ul>
+
 				<!-- <h2>Other Notes</h2> -->
 				<ul class='list'>
 					<li class='comp'>
