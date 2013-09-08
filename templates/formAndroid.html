@@ -66,7 +66,7 @@
 								div.innerHTML = '<img style="width: 90px;" src="' + evt.target.result + '" />';
 								if(first){
 								document.getElementById('leftfilesInfo').appendChild(div);
-								first = false;
+								// first = false;
 								}
 								else{
 								document.getElementById('rightfilesInfo').appendChild(div);
@@ -74,6 +74,18 @@
 							};
 						}(file));
 						reader.readAsDataURL(file);
+						var URL = window.URL || window.webkitURL;
+ 
+						// Create and revoke ObjectURL
+						var imgURL = URL.createObjectURL(file);
+
+						// Set img src to ObjectURL
+						// var imgElephant = document.getElementById("elephant");
+						// imgElephant.setAttribute("src", imgURL);
+
+						// Revoking ObjectURL
+						URL.revokeObjectURL(imgURL);
+						
 					}
 				} else {
 					alert('The File APIs are not fully supported in this browser.');
@@ -136,10 +148,13 @@
 					// xhr.open('POST', 'uploadResized.php', true);
 					// xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 					var data = 'image=' + dataURL;
+					data = dataURL;
+				
 					console.log(data);
 					alert("seetting!");
 					if (first){
 						document.getElementById('leftIn').setAttribute("value", data);
+						first = false;
 					}
 					else {
 						document.getElementById('rightIn').setAttribute("value", data);
@@ -278,7 +293,7 @@
       $(function() {
 		    $('.button.done').on('click', function() {
 		        $('#userForm')[0].submit();
-		        // form = $.form2JSON()
+		        
 		    });
 
 		
@@ -321,6 +336,7 @@
 		             <input type="hidden" id="leftIn" name="inputLeftEyeHidden" value="">
 
 		             <input type="hidden" id="rightIn" name="inputRightEyeHidden" value="">
+
 				<h2>Personal Info</h2>
 				<ul class='list'>
 					<li class='comp'>
@@ -403,6 +419,10 @@
 					<li>
 						<h3>CO</h3> 
 						<input type='radio' name="leftEyeRating" value='CO'>
+					</li>
+					<li>
+						<h3>None</h3> 
+						<input type='radio' name="leftEyeRating" value='None'>
 					</li>					
 				</ul>
 				<!-- <h2>Left Eye Notes</h2> -->
@@ -461,6 +481,10 @@ then once online (check via xhr) post each item in indexDB
 					<li>
 						<h3>CO</h3> 
 						<input type='radio' name="rightEyeRating" value='CO'>
+					</li>
+					<li>
+						<h3>None</h3> 
+						<input type='radio' name="rightEyeRating" value='None'>
 					</li>					
 				</ul>
 				<!-- <h2>Left Eye Notes</h2> -->

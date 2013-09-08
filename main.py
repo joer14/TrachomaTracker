@@ -19,10 +19,15 @@ import urllib
 import webapp2
 import datetime
 import cgi
+import base64
+import logging
 from google.appengine.ext import db
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.webapp import template, logging
+from google.appengine.api import files
+
+
 
 class Patient(db.Model):
     join_date = db.DateProperty()
@@ -49,6 +54,7 @@ class Patient(db.Model):
 
 class MainHandler(webapp2.RequestHandler):
   def get(self):
+    logging.getLogger().setLevel(logging.DEBUG)
     upload_url = blobstore.create_upload_url('/upload')
     self.response.out.write('<html><body>')
     self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">' % upload_url)
@@ -75,15 +81,33 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     patient.clinicNumber = 1
     patient.otherNotes = cgi.escape(self.request.get('otherNotes'))
     
-    upload_files = self.get_uploads('inputLeftEye')  # 'file' is file upload field in the form
+    upload_files = self.get_uploads('inputLeftEye') 
     if (len(upload_files)):
+        logging.ERROR('Start guestbook signing request')
         blob_info = upload_files[0]
         patient.leftEyePhoto = upload_files[0].key()
         patient.leftEyePhotoURL = str(blob_info.key())
+
     else:
         leftimg = cgi.escape(self.request.get('inputLeftEyeHidden'))
         if (len(leftimg)):
             #reconstruct and store image
+            leftimg = base64.b64decode(leftimg)
+            # image/jpeg
+            file_name = files.blobstore.create(mime_type='image/jpeg')
+
+            # Open the file and write to it
+            with files.open(file_name, 'a') as f:
+              f.write('leftimg')
+
+            # Finalize the file. Do this before attempting to read it.
+            files.finalize(file_name)
+
+            # Get the file's blob key
+            blob_key = files.blobstore.get_blob_key(file_name)
+            patient.leftEyePhotoURL = str(blob_key)
+
+
 
     upload_files2 = self.get_uploads('inputRightEye')
     if (len(upload_files2)):
