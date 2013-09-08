@@ -31,7 +31,8 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
-            <li><a href="/form">Form</a></li>
+            <li><a href="/form2">Form</a></li>
+            <li><a href="/formandroid">Android Form</a></li>
             <li><a href="/results">Results</a></li>
             <li class="active"><a href="/dataset">Dataset</a></li>
             <li><a href="#about">About</a></li>
@@ -70,12 +71,38 @@
                     <td>Male</td>     
                     <td>43</td>
                     <td>TF</td>
-                    <td>Left Eye Note...need wrap here</td>
-                    <td><img src="pics/guide2.png"width="85" height="60"/></td>
+                    <td>Text Info</td>
+                    <td><img src="resources/img/guide2.png"width="85" height="60"/></td>
                     <td>CO</td>
-                    <td>Right Eye Note...need wrap here</td>
-                    <td><img src="pics/guide3.png"width="85" height="60" /></td>
+                    <td>Right Eye Note</td>
+                    <td><img src="resources/img/guide3.png"width="85" height="60" /></td>
+                    <td></td>
                 </tr>
+                <tr>
+                    <td>Yordanos Senai</td>
+                    <td>Female</td>     
+                    <td>7</td>
+                    <td>TF</td>
+                    <td></td>
+                    <td><img src="resources/img/guide1.png"width="85" height="60"/></td>
+                    <td>None</td>
+                    <td>Right Eye Note</td>
+                    <td><img src="resources/img/guide3.png"width="85" height="60" /></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Zerezghi, Ammanuel</td>
+                    <td>Male</td>     
+                    <td>23</td>
+                    <td>None</td>
+                    <td></td>
+                    <td><img src="resources/img/guide1.png"width="85" height="60"/></td>
+                    <td>TS</td>
+                    <td>Right Eye Note</td>
+                    <td><img src="resources/img/guide4.png"width="85" height="60" /></td>
+                    <td></td>
+                </tr>
+
                 {% for p in patients %}
                 <tr>
                     <td>{{p.lastName}}, {{p.firstName}} - {{p.middleName}}</td>
