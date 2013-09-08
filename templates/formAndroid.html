@@ -6,9 +6,12 @@
 	<meta name='apple-mobile-web-app-capable' content='yes'>
 	<meta name='msapplication-tap-highlight' content='no'>
 	<title>Form To JSON Submission</title>
-	<link rel='stylesheet' href='chui/chui.android-3.0.css'>
-	<script src='chui/chocolatechip-3.0.js'></script>
-	<script src='chui/chui-3.0.js'></script>
+	<link rel='stylesheet' href='resources/chui/chui.android-3.0.css'>
+	<script src='resources/chui/chocolatechip-3.0.js'></script>
+	<script src='resources/chui/chui-3.0.js'></script>
+	<script type="text/javascript" src="resources/js/idbstore.min.js"></script>
+	<script type="text/javascript" src="resources/js/app.js"></script>
+
    <style>
 
     	form li > label {
@@ -34,109 +37,145 @@
 
    </style>
    <script>
+		window.onload = function () { 
+			// window.addEventListener("DOMContentLoaded", init, false);​
+			
+			document.getElementById('inputRightEye').addEventListener('change', fileSelect, false);
+			document.getElementById('inputLeftEye').addEventListener('change', fileSelect, false);
+			var first = true;
+			function fileSelect(evt) {
+				if (window.File && window.FileReader && window.FileList && window.Blob) {
+					// alert("HI");
+					var files = evt.target.files;
+					var result = '';
+					var file;
+					for (var i = 0; file = files[i]; i++) {
+						// if the file is not an image, continue
+						if (!file.type.match('image.*')) {
+							continue;
+						}
+						reader = new FileReader();
+						reader.onload = (function (tFile) {
+							return function (evt) {
+								var div = document.createElement('div');
+								div.innerHTML = '<img style="width: 90px;" src="' + evt.target.result + '" />';
+								if(first){
+								document.getElementById('leftfilesInfo').appendChild(div);
+								first = false;
+								}
+								else{
+								document.getElementById('rightfilesInfo').appendChild(div);
+								};
+							};
+						}(file));
+						reader.readAsDataURL(file);
+					}
+				} else {
+					alert('The File APIs are not fully supported in this browser.');
+				}
+			}
+
+			if (window.File && window.FileReader && window.FileList && window.Blob) {
+				document.getElementById('inputRightEye').onchange = function(){
+					var files = document.getElementById('inputRightEye').files;
+					for(var i = 0; i < files.length; i++) {
+						resizeAndUpload(files[i]);
+					}
+				};
+				document.getElementById('inputLeftEye').onchange = function(){
+					var files = document.getElementById('inputRightEye').files;
+					for(var i = 0; i < files.length; i++) {
+						resizeAndUpload(files[i]);
+					}
+				};
+			} else {
+				alert('The File APIs are not fully supported in this browser.');
+			}
+
+			function resizeAndUpload(file) {
+			var reader = new FileReader();
+				reader.onloadend = function() {
+
+				var tempImg = new Image();
+				tempImg.src = reader.result;
+				tempImg.onload = function() {
+
+					var MAX_WIDTH = 400;
+					var MAX_HEIGHT = 300;
+					var tempW = tempImg.width;
+					var tempH = tempImg.height;
+					if (tempW > tempH) {
+						if (tempW > MAX_WIDTH) {
+						   tempH *= MAX_WIDTH / tempW;
+						   tempW = MAX_WIDTH;
+						}
+					} else {
+						if (tempH > MAX_HEIGHT) {
+						   tempW *= MAX_HEIGHT / tempH;
+						   tempH = MAX_HEIGHT;
+						}
+					}
+
+					var canvas = document.createElement('canvas');
+					canvas.width = tempW;
+					canvas.height = tempH;
+					var ctx = canvas.getContext("2d");
+					ctx.drawImage(this, 0, 0, tempW, tempH);
+					var dataURL = canvas.toDataURL("image/jpeg");
+
+					// var xhr = new XMLHttpRequest();
+					// xhr.onreadystatechange = function(ev){
+						// document.getElementById('filesInfo').innerHTML = 'Done!';
+					// };
+
+					// xhr.open('POST', 'uploadResized.php', true);
+					// xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+					var data = 'image=' + dataURL;
+					console.log(data);
+					// xhr.send(data);
+				  }
+
+			   }
+			   reader.readAsDataURL(file);
+			}
+		};
+		var serializedForm = null;	
       function submitForm() {
          var formData = $.form2JSON('#userForm');
          var data = JSON.stringify(formData);
+         serializedForm = data;
+         	 // serializedForm;
+         enterData();
+         // include function that clears form input fields here
+         
           // window.location = 'form-target.html?' + data;
       }
+        </script>
+
+
+		</script>
+
+		<script>
+
       $(function() {
 		    $('.button.done').on('click', function() {
 		        $('#userForm')[0].submit();
 		        // form = $.form2JSON()
 		    });
+
+		
+
 		    $('#selectList').UISelectList({ selected: 0, name:'sex' }); 
 		    $('#selectList1').UISelectList({ selected: 0, name:'leftEyeRating' });    
 		    $('#selectList2').UISelectList({ selected: 0, name:'rightEyeRating' }); 
+		    
 		    $('.button.cancel').on('click', function() {
 		        window.location = 'index.html';
 		        // form = $.form2JSON()
 		    });    
       });
       var left;
-      $(function() {
-		    $('#leftCapture').on('click', function() {
-		    	left = "left";
-		    	capturePhoto();
-		        // $('#userForm')[0].submit();
-		        // form = $.form2JSON()
-		    });
-		    $('#rightCapture').on('click', function() {
-		    	left = "right";
-		    	capturePhoto();
-		        // $('#userForm')[0].submit();
-		        // form = $.form2JSON()
-		    });
-		        
-      });
-
-
-	// A button will call this function
-	//
-	function capturePhoto() {
-	    sessionStorage.removeItem('imagepath');
-	    // Take picture using device camera and retrieve image as base64-encoded string
-	    navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
-	}
-
-	function onPhotoDataSuccess(imageURI) { 
-	        // Uncomment to view the base64 encoded image data
-	        // console.log(imageData);
-
-	        // Get image handle
-	        //
-	        var imgProfile = document.getElementById('imgProfile');
-
-	        // Show the captured photo
-	        // The inline CSS rules are used to resize the image
-	        //
-	        imgProfile.src = imageURI;
-	        if(sessionStorage.isprofileimage==1){
-	            getLocation();
-	        }
-	        movePic(imageURI);
-	}
-
-	// Called if something bad happens.
-	// 
-	function onFail(message) {
-	    alert('Failed because: ' + message);
-	}
-
-	function movePic(file){ 
-	    window.resolveLocalFileSystemURI(file, resolveOnSuccess, resOnError); 
-	} 
-
-	//Callback function when the file system uri has been resolved
-	function resolveOnSuccess(entry){ 
-	    var d = new Date();
-	    var n = d.getTime();
-	    //new file name
-	    var alert(left);
-	    var newFileName = left + n + ".jpg";
-	    var myFolderApp = "TrachomaPictures";
-
-	    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSys) {      
-	    //The folder is created if doesn't exist
-	    fileSys.root.getDirectory( myFolderApp,
-	                    {create:true, exclusive: false},
-	                    function(directory) {
-	                        entry.moveTo(directory, newFileName,  successMove, resOnError);
-	                    },
-	                    resOnError);
-	                    },
-	    resOnError);
-	}
-
-	//Callback function when the file has been moved successfully - inserting the complete path
-	function successMove(entry) {
-	    //Store imagepath in session for future use
-	    // like to store it in database
-	    sessionStorage.setItem('imagepath', entry.fullPath);
-	}
-
-	function resOnError(error) {
-	    alert(error.code);
-	}
+      
 
    </script>
 </head>
@@ -148,6 +187,14 @@
 	</nav>
 	<article class='current'>
 		<section>
+			<div id="clear" class="">
+		      <button onclick="app.clear()">Clear Store</button>
+		    </div>
+		    <div id="" class="">
+		      <button onclick="upload()">Upload Store</button>
+		    </div>
+
+
 			<form id='userForm' action='javascript:submitForm()'>
 				<h2>Personal Info</h2>
 				<ul class='list'>
@@ -202,8 +249,9 @@
 				</ul>
 				<h2>Left Eye Photo</h2>
 				
-				<a class='button align-right' id="leftCapture">Take Picture</a>
-
+				<!-- <a class='button align-right' id="leftCapture">Take Picture</a> -->
+				<input type="file" name="file" accept="image/*" name="inputLeftEye" id="inputLeftEye" capture="camera" />
+				<output id="leftfilesInfo"></output>
 				<h2>Left Eye Rating</h2>
 
 				<ul class='list' id='selectList1'>	
@@ -246,7 +294,21 @@
 				</ul>
 				<h2>Right Eye Photo</h2>
 				
-				<a class='button align-right' id="rightCapture">Take Picture</a>
+				<!-- <a class='button align-right' id="rightCapture">Take Picture</a> -->
+				<input type="file" name="file" accept="image/*" name="inputRightEye" id="inputRightEye" capture="camera" />
+				<!-- <canvas id="myCanvas" width="578" height="200"></canvas> -->
+				
+				<output id="rightfilesInfo"></output>
+
+
+<!-- capture photo,
+put in canvas,
+resize it,
+turn it into a string 
+put in json with other fields
+put that json in indexDB
+then once online (check via xhr) post each item in indexDB
+ -->
 
 				<h2>Right Eye Rating</h2>
 
@@ -288,7 +350,7 @@
 						</aside>
 					</li>
 				</ul>
-				<h2>Other Notes</h2>
+				<!-- <h2>Other Notes</h2> -->
 				<ul class='list'>
 					<li class='comp'>
 						<div>

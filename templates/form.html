@@ -34,7 +34,7 @@
                 if (m1 == "") {
                     alert("Gotta select a major bub.");                  
                 } else {
-                    $.post("/upload/{{uploadURL}}", { m1: m1, m2: m2, m3:m3, mi1:mi1, mi2:mi2, mi3:mi3 } )
+                    $.post("{{uploadURL}}", { m1: m1, m2: m2, m3:m3, mi1:mi1, mi2:mi2, mi3:mi3 } )
                             .done(function() {
                                alert("Data Loaded: " + data);
                                 // window.location.href = "/majorprogress";
@@ -67,7 +67,7 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
-            <li class="active"><a href="/form">Form</a></li>
+            <li class="active"><a href="/form2">Form</a></li>
             <li><a href="/results">Results</a></li>
             <li><a href="/dataset">Dataset</a></li>
             <li><a href="#about">About</a></li>
@@ -81,11 +81,11 @@
     <!-- <div class="row"> -->
     <!-- <div class="span10"> -->
 
-      <h3>New Patient Documentation</h3>
+      <h3>New Patient Documentation!!!</h3>
       <p>Document a trachoma. <br> More helper text.</p>
       
 
-      <form class="form-horizontal" action="/upload/{{fileURL}}" method="POST" enctype="multipart/form-data">
+      <form class="form-horizontal" action="{{fileURL}}" method="POST" enctype="multipart/form-data">
         <div class="control-group">
           <label class="control-label" for="inputFirst">First Name</label>
           <div class="controls">

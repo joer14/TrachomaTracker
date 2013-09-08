@@ -43,6 +43,7 @@ class Patient(db.Model):
     leftEyeNote = db.StringProperty()
     rightEyeNote = db.StringProperty()
     clinicNumber = db.IntegerProperty()
+    otherNotes = db.StringProperty()
     
 
 
@@ -89,6 +90,19 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     resource = str(urllib.unquote(resource))
     blob_info = blobstore.BlobInfo.get(resource)
     self.send_blob(blob_info)
+
+class Android(webapp2.RequestHandler):
+    def get(self):
+        # upload_url = blobstore.create_upload_url('/upload')
+        # fileURL = upload_url
+        # fileurl = "joeee"
+        output = {
+            'fileURL': 'fileURL',
+            'joe': 'hiiii'     
+            }
+
+        path = os.path.join(os.path.dirname(__file__), 'templates/formAndroid.html')
+        self.response.write(template.render(path, output))
 
 class Homepage(webapp2.RequestHandler):
     def get(self):
@@ -148,6 +162,8 @@ class Dataset(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([('/', Homepage),
+                               ('/form2', Form),
+                               ('/formandroid', Android),
 							   ('/results', Results),
                                ('/form', Form),
                                ('/dataset', Dataset),
